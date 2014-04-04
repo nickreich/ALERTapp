@@ -14,7 +14,7 @@ shinyUI(pageWithSidebar(
         
         h4("Choose Parameters"),
         
-        sliderInput("firstMonth", "First Month of Flu Season", min=1, max=12, value=8),
+        sliderInput("firstMonth", "First Month of Flu Season", min=1, max=12, value=9),
         sliderInput("minWeeks", "Shortest Possible Flu Season (Weeks)", min=1, max=10, value=8),
         sliderInput("k", "+/- k Weeks", min=0, max=5, value=2),
         sliderInput("lag", "Days Between Cases Reports and Policy Action", min=1, max=21, value=7),
@@ -28,7 +28,9 @@ shinyUI(pageWithSidebar(
         
         helpText(a("Send us your comments or feedback!", href="mailto:slauer@schoolph.umass.edu", target="_blank")),
         
-        helpText(a("ALERT on GitHub", href="https://github.com/nickreich/ALERT", target="_blank"))
+        helpText(a("ALERT on GitHub", href="https://github.com/nickreich/ALERT", target="_blank")),
+        
+        helpText(a("ALERTapp on GitHub", href="https://github.com/nickreich/ALERTapp", target="_blank"))
     ),
     
     mainPanel(
@@ -37,7 +39,8 @@ shinyUI(pageWithSidebar(
                      tags$style(type="text/css", '#summary tfoot {display:none;}'), 
                      plotOutput("dataplot")),
             tabPanel("Performance Graphs", plotOutput("durplot"),
-                     plotOutput("pctplot"))
+                     plotOutput("pctplot"),
+                     helpText("The line represents the median values for each variable. The highlighted area spans from the minimum to the maximum value for each threshold."))
         )
     )
 ))
