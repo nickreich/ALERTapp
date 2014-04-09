@@ -35,12 +35,15 @@ shinyUI(pageWithSidebar(
     
     mainPanel(
         tabsetPanel(
-            tabPanel("Data Summary", dataTableOutput("summary"), 
+            tabPanel("Data Summary", 
+                     helpText('The Above Local Elevated Respiratory illness Threshold (ALERT) algorithm provides a simple, easy-to-use tool for defining the onset of seasonal epidemics in a community (such as a city or a hospital) that systematically collects surveillance data on a particular disease. The ALERT algorithm was designed and validated with hospital surveillance data on influenza A virus. A description of the underlying methodology is currently under review.'),
+                     helpText('The data provided in this app is real influenza A data that has been modified from its original source to mask the original data, as part of existing data sharing agreements. Users may use the “upload” box on the left-hand side of this page to upload their own data. To function properly, any uploaded dataset must have a column named “Date” and a column named “Cases."'),
+                     dataTableOutput("summary"), 
                      tags$style(type="text/css", '#summary tfoot {display:none;}'), 
                      plotOutput("dataplot")),
             tabPanel("Performance Graphs", plotOutput("durplot"),
                      plotOutput("pctplot"),
-                     helpText("The line represents the median values for each variable. The highlighted area spans from the minimum to the maximum value for each threshold."))
+                     helpText("The highlighted area spans from the minimum to the maximum value for each threshold."))
         )
     )
 ))
