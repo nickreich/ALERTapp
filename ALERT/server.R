@@ -49,7 +49,7 @@ shinyServer(function(input, output) {
     colnames(threshdat) <- c("Threshold", "Median Duration", "Median % Cases Captured", 
                              "Min % Cases Captured", "Max % Cases Captured", 
                              "% Peaks Captured", "% Peaks +/- k Weeks Captured", 
-                             "Median # of Weeks Below Threshold", "Median # of Weeks Longer Than Optimal")
+                             "Mean # of Weeks Below Threshold", "Mean # of Weeks Longer Than Optimal")
     threshdat
   }, options=list(bFilter=0, bSortClasses=TRUE, bProcessing=0, bPaginate=0, bInfo=0))
   
