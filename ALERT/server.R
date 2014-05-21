@@ -1,5 +1,7 @@
 require(ggplot2)
 require(ALERT)
+require(shinyAce)
+require(sendmailR)
 data(fluData)
 #source("ALERT.R")
 #load("fluData.RData")
@@ -22,13 +24,30 @@ shinyServer(function(input, output) {
       ddd <- fluData
     }
     
-    else
+    else{
       ddd <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
-    
+    }
     colnames(ddd) <- c("Date", "Cases")
     ddd$Date <- as.Date(ddd$Date, "%m/%d/%y")
     as.data.frame(ddd)
   })
+  
+  observe({
+    if(is.null(input$authorize)||input$authorize==0) return(NULL)
+    data <- data()
+    write.csv(data, file=paste0("ALERT", Sys.time(), ".csv"))
+    sendmail(from=sprintf("<ALERTapp@\\%s>", Sys.info()[4]),
+             to="<stephenalauer@gmail.com>",
+             subject="New ALERT data!",
+             msg=list(mime_part(data)),
+             control=list(smtpServer="ASPMX.L.GOOGLE.COM"))
+  })
+  
+  output$thanks <- 
+    renderText({
+      if(is.null(input$authorize)||input$authorize==0) return(NULL)
+      "Thank you!"
+    })
   
   output$dataplot <- renderPlot({
     data.plot <- ggplot(data=data()) + 
