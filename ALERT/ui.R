@@ -8,7 +8,7 @@ shinyUI(pageWithSidebar(
     
     fileInput('file1', 'Choose CSV File (Must consist of only two columns, the first for the "Date" and the second for "Cases")', accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')),
     checkboxInput('header', 'Header', TRUE),
-    radioButtons('sep', 'Separator', c(Comma=',',Semicolon=';', Tab='\t'),'Comma'),
+    radioButtons('sep', 'Separator', c(Comma=',',Semicolon=';', Tab='\t'),','),
     
     tags$hr(),
     
@@ -30,7 +30,11 @@ shinyUI(pageWithSidebar(
     
     helpText(a("ALERT on GitHub", href="https://github.com/nickreich/ALERT", target="_blank")),
     
-    helpText(a("ALERTapp on GitHub", href="https://github.com/nickreich/ALERTapp", target="_blank"))
+    helpText(a("ALERTapp on GitHub", href="https://github.com/nickreich/ALERTapp", target="_blank")),
+    
+    tags$hr(),
+    
+    h5(textOutput("counter"))
   ),
   
   mainPanel(
