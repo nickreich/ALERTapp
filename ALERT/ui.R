@@ -9,9 +9,9 @@ shinyUI(pageWithSidebar(
     fileInput('file1', 'Choose CSV File (Must consist of only two columns, the first for the "Date" and the second for "Cases")', accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')),
     checkboxInput('header', 'Header', TRUE),
     radioButtons('sep', 'Separator', c(Comma=',',Semicolon=';', Tab='\t'),','),
-    helpText('Do you authorize the authors of this website to use this data in the interest of improving the ALERT algorithm?'),
-    actionButton('authorize', 'Authorize'),
-    h5(textOutput("thanks")),
+    #helpText('Do you authorize the authors of this website to use this data in the interest of improving the ALERT algorithm?'),
+    #actionButton('authorize', 'Authorize'),
+    #h5(textOutput("thanks")),
     tags$hr(),
     
     h4("Choose Parameters"),
