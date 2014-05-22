@@ -35,7 +35,7 @@ shinyServer(function(input, output) {
   observe({
     if(is.null(input$authorize)||input$authorize==0) return(NULL)
     data <- data()
-    write.csv(data, file=paste0("ALERT", Sys.time(), ".csv"))
+    #write.csv(data, file=paste0("ALERT", Sys.time(), ".csv"))
     sendmail(from=sprintf("<ALERTapp@\\%s>", Sys.info()[4]),
              to="<stephenalauer@gmail.com>",
              subject="New ALERT data!",
