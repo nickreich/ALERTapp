@@ -51,7 +51,7 @@ shinyUI(pageWithSidebar(
       tabPanel("Performance Graphs", plotOutput("durplot"),
                plotOutput("pctplot"),
                helpText("The highlighted area spans from the minimum to the maximum value for each threshold."))
-    ),
-    includeHTML("statcounter.js")
+    )#,
+    #includeHTML("statcounter.js")
   )
 ))
