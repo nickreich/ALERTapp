@@ -33,10 +33,6 @@ shinyUI(pageWithSidebar(
     helpText(a("ALERT on GitHub", href="https://github.com/nickreich/ALERT", target="_blank")),
     
     helpText(a("ALERTapp on GitHub", href="https://github.com/nickreich/ALERTapp", target="_blank")),
-    
-    tags$hr(),
-    
-    h5(textOutput("counter"))
   ),
   
   mainPanel(

@@ -1,23 +1,13 @@
 require(ggplot2)
 require(ALERT)
-require(shinyAce)
-require(sendmailR)
+#require(shinyAce)
+#require(sendmailR)
 data(fluData)
 #source("ALERT.R")
 #load("fluData.RData")
 cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 shinyServer(function(input, output) {
-  output$counter <- 
-    renderText({
-      if (!file.exists("counter.Rdata")) counter <- 0
-      if (file.exists("counter.Rdata")) load(file="counter.Rdata")
-      counter <- counter + 1
-      
-      save(counter, file="counter.Rdata")     
-      paste0("Hits: ", counter)
-    })
-  
   data <- reactive({
     inFile <- input$file1
     if(is.null(inFile)){
