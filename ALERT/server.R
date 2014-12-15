@@ -1,34 +1,39 @@
-require(ggplot2)
-require(ALERT)
-#require(shinyAce)
-#require(sendmailR)
+library(ggplot2)
+library(ALERT)
+#library(shinyAce)
+#library(sendmailR)
 data(fluData)
 #source("ALERT.R")
 #load("fluData.RData")
 cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 shinyServer(function(input, output) {
-  data <- reactive({
+  flu_data <- reactive({
     inFile <- input$file1
     if(is.null(inFile)){
-      ddd <- fluData
+      flu_data <- fluData
     }
     else{
-      ddd <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
+      flu_data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
     }
-    colnames(ddd) <- c("Date", "Cases")
-    ddd$Date <- as.Date(ddd$Date, "%m/%d/%y")
-    as.data.frame(ddd)
+    date_col <- which(colnames(flu_data) %in% c("Date", "date", "DATE"))
+    case_col <- which(colnames(flu_data) %in% c("Cases", "cases", "CASES", "Case", "case", "CASE"))
+    flu_data <- flu_data[,c(date_col, case_col)]
+    colnames(flu_data) <- c("Date", "Cases")
+    flu_data$Date <- as.Date(ymd(flu_data$Date))
+    validate(
+    need(length(which(is.na(flu_data$Date))) == 0, 'Date Input Error: Please make sure that your "Date" column is in an unambiguous YMD format. (i.e. yyyy-mm-dd, yy/mm/dd, etc.) If you continue to experience problems, please email the developers of this app by using the link in the lower left.'))
+    as.data.frame(flu_data)
   })
   
   #observe({
   #  if(is.null(input$authorize)||input$authorize==0) return(NULL)
-  #  data <- data()
-  #  write.csv(data, file=paste0("ALERT", Sys.time(), ".csv"))
+  #  flu_data <- flu_data()
+  #  write.csv(flu_data, file=paste0("ALERT", Sys.time(), ".csv"))
   #  sendmail(from=sprintf("<ALERTapp@\\%s>", Sys.info()[4]),
   #           to="<stephenalauer@gmail.com>",
   #           subject="New ALERT data!",
-  #           msg=list(mime_part(data)),
+  #           msg=list(mime_part(flu_data)),
   #           control=list(smtpServer="ASPMX.L.GOOGLE.COM"))
   #})
   
@@ -39,7 +44,7 @@ shinyServer(function(input, output) {
   #  })
   
   output$dataplot <- renderPlot({
-    data.plot <- ggplot(data=data()) + 
+    data.plot <- ggplot(data=flu_data()) + 
       geom_bar(aes(x=Date, y=Cases), stat="identity", fill="#0072B2", color="#0072B2") + 
       scale_y_continuous(name="Case Counts") +
       theme_bw() + 
@@ -51,7 +56,7 @@ shinyServer(function(input, output) {
   })
   
   threshdat <- reactive({
-    tmp <- createALERT(data=data(), 
+    tmp <- createALERT(data=flu_data(), 
                        firstMonth=input$firstMonth, 
                        minWeeks=input$minWeeks, 
                        k=input$k, 
@@ -69,10 +74,10 @@ shinyServer(function(input, output) {
                              "% Peaks Captured", "% Peaks +/- k Weeks Captured", 
                              "Mean # of Weeks Below Threshold", "Mean # of Weeks Longer Than Optimal")
     threshdat
-  }, options=list(bFilter=0, bSortClasses=TRUE, bProcessing=0, bPaginate=0, bInfo=0))
+  }, options=list(searching=0, orderClasses=TRUE, processing=0, paging=0, info=0))
   
   details <- reactive({
-    tmp <- createALERT(data=data(), 
+    tmp <- createALERT(data=flu_data(), 
                        firstMonth=input$firstMonth, 
                        minWeeks=input$minWeeks, 
                        k=input$k, 
