@@ -14,7 +14,7 @@ shinyUI(pageWithSidebar(
     
     h4("Upload Data"),
     
-    helpText('"For this app to function properly, the CSV file must consist of only two columns, the first for the "Date" and the second for "Cases." The "Date" column must be in an unambiguous YMD format.'),
+    helpText('For this app to function properly, the CSV file must consist of only two columns, the first for the "Date" and the second for "Cases."'),
     
     fileInput('file1', 'Choose CSV File', accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')),
     checkboxInput('header', 'Header', TRUE),
@@ -23,6 +23,14 @@ shinyUI(pageWithSidebar(
     #actionButton('authorize', 'Authorize'),
     #h5(textOutput("thanks")),
     tags$hr(),
+    
+    h4("Data formatting"),
+    
+    checkboxInput("removeNA", "NA values to 0?", value = FALSE),
+    
+    textInput("dateFormat", "Alternative date format"),
+    
+    helpText('If your dates use the "American" style of month/day/year, write "mdy". If your dates use the "International" style of day/month/year, write "dmy". Otherwise, the app assumes that you are using computer timestamps with YMD formatting.'),
     
     h4("Choose Parameters"),
     
@@ -58,7 +66,7 @@ shinyUI(pageWithSidebar(
                           target = "_blank"), 
                         ' by Reich et al, published in Clinical Infectious Diseases in November 2014.'),
                helpText('The Above Local Elevated Respiratory illness Threshold (ALERT) algorithm provides a simple, easy-to-use tool for defining the onset of seasonal epidemics in a community (such as a city or a hospital) that systematically collects surveillance data on a particular disease. The ALERT algorithm was designed and validated with hospital surveillance data on influenza A virus.'),
-               helpText('The data provided in this app is real influenza A data that has been modified from its original source to mask the original data, as part of existing data sharing agreements. Users may use the “upload” box on the left-hand side of this page to upload their own data. To function properly, any uploaded dataset must have a column named “Date” and a column named “Cases." The "Date" column must be in an unambiguous YMD format.'),
+               helpText('The data provided in this app is real influenza A data that has been modified from its original source to mask the original data, as part of existing data sharing agreements. Users may use the “upload” box on the left-hand side of this page to upload their own data. To function properly, any uploaded dataset must have a column named “Date” and a column named “Cases." The "Date" column must be in an unambiguous YMD format or specified as "dmy" or "mdy" in the "Alternative date format" textbox.'),
                helpText("This project was motivated by the authors' work on the ", 
                         a("Respiratory Protection Effectiveness Clinical Trial (ResPECT)",
                           href = "http://clinicaltrials.gov/show/NCT01249625", 

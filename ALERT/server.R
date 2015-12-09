@@ -9,6 +9,7 @@ cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 
 shinyServer(function(input, output) {
   flu_data <- reactive({
+    # browser()
     inFile <- input$file1
     if(is.null(inFile)){
       flu_data <- fluData
@@ -20,9 +21,21 @@ shinyServer(function(input, output) {
     case_col <- which(colnames(flu_data) %in% c("Cases", "cases", "CASES", "Case", "case", "CASE"))
     flu_data <- flu_data[,c(date_col, case_col)]
     colnames(flu_data) <- c("Date", "Cases")
-    flu_data$Date <- as.Date(ymd(flu_data$Date))
+    
+    if(input$removeNA)
+      flu_data$Cases[is.na(flu_data$Cases)] <- 0
+    
+    if(tolower(input$dateFormat)=="dmy")
+      flu_data$Date <- as.Date(dmy(flu_data$Date))
+    
+    if(tolower(input$dateFormat)=="mdy")
+      flu_data$Date <- as.Date(mdy(flu_data$Date))
+    
+    if(tolower(input$dateFormat)!="dmy" & tolower(input$dateFormat)!="mdy")
+      flu_data$Date <- as.Date(ymd(flu_data$Date))
+    
     validate(
-    need(length(which(is.na(flu_data$Date))) == 0, 'Date Input Error: Please make sure that your "Date" column is in an unambiguous YMD format. (i.e. yyyy-mm-dd, yy/mm/dd, etc.) If you continue to experience problems, please email the developers of this app by using the link in the lower left.'))
+      need(length(which(is.na(flu_data$Date))) == 0, 'Date Input Error: Please make sure that your "Date" column is in an unambiguous YMD format. (i.e. yyyy-mm-dd, yy/mm/dd, etc.) If not, then enter the correct date format (either "dmy" or "mdy") in the "Alternative date format" textbox. If you continue to experience problems, please email the developers of this app by using the link in the lower left.'))
     as.data.frame(flu_data)
   })
   
@@ -56,6 +69,7 @@ shinyServer(function(input, output) {
   })
   
   threshdat <- reactive({
+    # browser()
     tmp <- createALERT(data=flu_data(), 
                        firstMonth=input$firstMonth, 
                        minWeeks=input$minWeeks, 
@@ -68,6 +82,11 @@ shinyServer(function(input, output) {
   })
   
   output$summary = renderDataTable({
+    # browser()
+    flu_data <- flu_data()
+    if(length(which(is.na(flu_data$Cases)))>0)
+       stop('There are missing values in the "Case" column. Either fill in missing data or click the "NA values to 0?" checkbox.')
+
     threshdat <- threshdat()
     colnames(threshdat) <- c("Threshold", "Median Duration", "Median % Cases Captured", 
                              "Min % Cases Captured", "Max % Cases Captured", 
@@ -89,6 +108,7 @@ shinyServer(function(input, output) {
   })
   
   output$durplot <- renderPlot({
+    # browser()
     threshdat <- threshdat()
     details <- details()
     threshdat$min.dur <- sapply(details, FUN=function(x) min(x[,"duration"]))
